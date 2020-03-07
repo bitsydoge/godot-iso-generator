@@ -101,7 +101,7 @@ func set_adapt_uv(new_type):
 # Updater
 
 func _update_side():
-	_cached_side = (sqrt(pow(_cached_size,2)+pow(_cached_size*2,2))/2.0)
+	_cached_side = _cached_size#(sqrt(pow(_cached_size,2)+pow(_cached_size*2,2))/2.0)
 	_update_cached_y_position_difference()
 	_update_all_pool_point()
 	

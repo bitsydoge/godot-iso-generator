@@ -27,19 +27,19 @@ onready var result = $Result
 var current_load : int
 
 func _ready():
-#	var test_args = [
-#		"C:\\tempo\\1.jpg", # text top
-#		"C:\\tempo\\1.jpg", # text left
-#		"C:\\tempo\\1.jpg", # text right
-#		"#ffffff", # color top
-#		"#ffffff", # color left
-#		"#ffffff", # color right
-#		"128", # size
-#		"0.5", # height
-#		"1", # uv_adapt
-#		"1", # antialiasing
-#		"C:\\tempo\\new_test_1.png" # save test
-#		]
+	var test_args = [
+		"C:\\tempo\\1.jpg", # text top
+		"C:\\tempo\\forest_face.png", # text left
+		"C:\\tempo\\grass_face.png", # text right
+		"#ffffff", # color top
+		"#ffffff", # color left
+		"#ffffff", # color right
+		"32", # size
+		"0.5", # height
+		"1", # uv_adapt
+		"1", # antialiasing
+		"C:\\tempo\\new_test_1.png" # save test
+		]
 	
 	if OS.get_cmdline_args().size() == 11:
 		call_deferred("args_gen_10", OS.get_cmdline_args())
@@ -51,25 +51,24 @@ func args_gen_10(args):
 	image.load(args[0])
 	iso.top_texture = ImageTexture.new()
 	iso.top_texture.create_from_image(image)
+	image = Image.new()
 	image.load(args[1])
 	iso.left_texture = ImageTexture.new()
 	iso.left_texture.create_from_image(image)
+	image = Image.new()
 	image.load(args[2])
 	iso.right_texture = ImageTexture.new()
 	iso.right_texture.create_from_image(image)
-	iso.top_color = Color(args[3])
-	iso.left_color = Color(args[4])
-	iso.right_color = Color(args[5])
-	iso.rect_size.x = float(args[6])
-	iso.height = float(args[7])
-	match(int(args[8])):
-		0:
-			iso.adapt_uv = IsoGenerator.UvAdaptMode.NONE
-		1:
-			iso.adapt_uv = IsoGenerator.UvAdaptMode.TOP
-		2:
-			iso.adapt_uv = IsoGenerator.UvAdaptMode.BOTTOM
-	iso.antialiasing = bool(int(args[9]))
+	
+	######
+	
+	size.value = float(args[6])
+	height.value = float(args[7])
+	uv_adapt.selected = int(args[8])
+	top_color.color = Color(args[3])
+	left_color.color = Color(args[4])
+	right_color.color = Color(args[5])
+	antialiasing.pressed = bool(int(args[9]))
 	
 	_generate()
 	
@@ -116,7 +115,7 @@ func _generate():
 	iso.height = height.value
 	iso.antialiasing = antialiasing.pressed
 	iso.rect_size.x = size.value*2
-	iso.rect_size.y = size.value*2 + sqrt(pow(size.value,2)+pow(size.value*2,2))/2.0
+	iso.rect_size.y = size.value*2 #sqrt(pow(size.value,2)+pow(size.value*2,2))/2.0
 	
 	match(uv_adapt.get_selected_id()):
 		0:
@@ -127,8 +126,8 @@ func _generate():
 			iso.adapt_uv = IsoGenerator.UvAdaptMode.BOTTOM
 	
 	# Viewport Update
-	viewport.size.x = iso.rect_size.x
-	viewport.size.y = iso.rect_size.y
+	viewport.size.x = size.value*2
+	viewport.size.y = size.value*2#sqrt(pow(size.value,2)+pow(size.value*2,2))/2.0
 	
 	yield(get_tree(), "idle_frame")
 	
